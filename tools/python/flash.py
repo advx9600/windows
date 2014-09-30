@@ -1,6 +1,7 @@
 __author__ = 'Administrator'
 import sys
 import os
+from os.path import basename
 
 name=""
 isUsed=0
@@ -14,7 +15,7 @@ csipLibs=["libcrypto.so", "libpj_opensl_dev.so", "libpj_silk_codec.so",  "libpjs
 if  not isUsed and name.__len__() >0 :
     for i in flashImg:
         j=i.split("=",2);
-        if name.__contains__(j[1]):
+        if basename(name).startswith(j[1].split(".")[0]) and basename(name).endswith("."+j[1].split(".")[1]):
             isUsed=1
             os.system("fastboot flash "+j[0]+" "+name)
             break
@@ -29,5 +30,8 @@ if not isUsed and name.__len__() > 0:
             os.system("adb push "+name+" /data/data/com.csipsimple/lib")
             os.system("adb shell am start -n com.csipsimple/com.csipsimple.ui.SipHome")
             break
+
+if not isUsed:
+    print "nothing to do"
 
 raw_input("click enter key to exit")
