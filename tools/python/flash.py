@@ -31,6 +31,10 @@ if not isUsed and name.__len__() > 0:
             os.system("adb shell am start -n com.csipsimple/com.csipsimple.ui.SipHome")
             break
 
+if not isUsed and name[-4:]=='.apk':
+    isUsed=1
+    os.system("adb install "+name)
+
 if not isUsed:
     print "nothing to do"
 
