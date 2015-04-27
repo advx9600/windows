@@ -14,7 +14,7 @@ isUsed=0
 if  sys.argv.__len__() >1:
     name=sys.argv[1];
 
-flashImg=["bootloader=u-boot.bin","kernel=zImage","kernel=kernel.img","system=system.img"]
+flashImg=["bootloader=u-boot.bin","kernel=zImage","kernel=kernel.img","ramdisk=ramdisk-uboot.img","system=system.img"]
 csipLibs=["libcrypto.so", "libpj_opensl_dev.so", "libpj_silk_codec.so",  "libpjsipjni.so" ,"libstlport_shared.so"]
 
 if  not isUsed and name.__len__() >0 :
@@ -57,6 +57,7 @@ if not isUsed and name == "1" or name == "2":
                 print ("begin fastboot")
                 print (flashCmd)
                 os.system(flashCmd)
+                os.system("fastboot reboot")
                 print ("end fastboot")
         time.sleep(1)
             
