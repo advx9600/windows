@@ -5,11 +5,12 @@ import time
 import stat
 from os import path
 from os.path import basename
+import ctypes
 
 name=""
-isUsed=0
+isUsed=False
 # name 
-# 1 loop flash u-boot,2 loop flash kernel
+# 1 loop flash img
 
 if  sys.argv.__len__() >1:
     name=sys.argv[1];
@@ -21,49 +22,55 @@ if  not isUsed and name.__len__() >0 :
     for i in flashImg:
         j=i.split("=",2);
         if basename(name)==(j[1]):
-            isUsed=1
+            isUsed=True
             os.system("fastboot flash "+j[0]+" \""+name+"\"")
             break
 
 if not isUsed and name.__len__() > 0:
     for i in csipLibs:        
         if name.__contains__(i):
-            isUsed=1
+            isUsed=True
             os.system("adb shell am force-stop com.csipsimple")
             os.system("adb push "+name+" /data/data/com.csipsimple/lib")
             os.system("adb shell am start -n com.csipsimple/com.csipsimple.ui.SipHome")
             break
 
 if not isUsed and name[-4:]=='.apk':
-    isUsed=1
+    isUsed=True
     os.system("adb install "+name)
 
-if not isUsed and name == "1" or name == "2":
-    isUsed=1
-    cmd=["u-boot.bin","fastboot flash bootloader u-boot.bin"]
-    cmd2=["zImage","fastboot flash kernel zImage"]
-    if (int(name) ==2):
-        cmd=cmd2
-    fileModTime=0    
-    file=cmd[0];
-    flashCmd=cmd[1]
+def loopFlashImg(topDir):
+    if (len(topDir) <1):
+        topDir="."
+    whnd = ctypes.windll.kernel32.GetConsoleWindow()
+    if whnd != 0:
+        ctypes.windll.user32.ShowWindow(whnd, 0)
+        ctypes.windll.kernel32.CloseHandle(whnd)
+    cmdFastBoot="fastboot flash"
+    cmd=[["u-boot.bin","bootloader","0"],["zImage","kernel","0"],["kernel.img","kernel","0"],["ramdisk.img","ramdisk","0"],["ramdisk-uboot.img","ramdisk","0"],["system","system","0"]]
     while (True):
-        if (path.exists(file)):
-            st=os.stat(file)                        
-            if fileModTime < 1:
-                fileModTime = int(st[stat.ST_MTIME])
-            if  fileModTime != int(st[stat.ST_MTIME]):
-                fileModTime = int(st[stat.ST_MTIME])
-                print ("begin fastboot")
-                print (flashCmd)
-                os.system(flashCmd)
-                os.system("fastboot reboot")
-                print ("end fastboot")
+        for  data in cmd:
+            file = topDir + "/" + data[0]
+            if (path.exists(file)):
+                lastTime=os.stat(file)[stat.ST_MTIME]
+                if (int(data[2]) <1):
+                    data[2]=lastTime
+                if (int(data[2]) != lastTime):
+                    data[2]=lastTime
+                    print ("begin fastboot")
+                    flashCmd=cmdFastBoot+" "+data[1]+ " "+topDir+"/"+ data[0]
+                    print (flashCmd)
+                    os.system(flashCmd)
+                    os.system("fastboot reboot")
+                    print ("end fastboot")
         time.sleep(1)
-            
-            
-    
+        
+if not isUsed and name == "flashImg":
+    isUsed=True
+    loopFlashImg("C:/Users/Administrator/Desktop/temp/img")
+        
+
 if not isUsed:
     print ("nothing to do")
 
-input("click enter key to exit")
+#input("click enter key to exit")
