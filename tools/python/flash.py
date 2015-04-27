@@ -10,7 +10,7 @@ import ctypes
 name=""
 isUsed=False
 # name 
-# 1 loop flash img
+# flashImg: loop flash img
 
 if  sys.argv.__len__() >1:
     name=sys.argv[1];
@@ -69,8 +69,18 @@ if not isUsed and name == "flashImg":
     isUsed=True
     loopFlashImg("C:/Users/Administrator/Desktop/temp/img")
         
-
+if not isUsed and len(name) ==0:
+    name = input("input command:")
+    if (name == "linux"):
+        isUsed = True
+        topDir = "G:/BaiduYunDownload/qt_news_system"
+        os.system("fastboot flash kernel "+topDir+"/zImage")       
+        os.system("fastboot flash ramdisk "+topDir+"/ramdisk-uboot.img")
+        os.system("fastboot flash system "+topDir+"/system.img")
+    elif (name == "cancel"):
+        os.system("shutdown -a")
+        
 if not isUsed:
     print ("nothing to do")
 
-#input("click enter key to exit")
+input("click enter key to exit")
