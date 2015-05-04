@@ -79,6 +79,8 @@ if not isUsed and len(name) ==0:
         os.system("fastboot flash system "+topDir+"/system.img")
     elif (name == "cancel"):
         os.system("shutdown -a")
+    elif (name == "cmd"):
+        os.system("cmd")
         
 if not isUsed:
     print ("nothing to do")
