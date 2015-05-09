@@ -78,7 +78,22 @@ if not isUsed and len(name) ==0:
         os.system("fastboot flash ramdisk "+topDir+"/ramdisk-uboot.img")
         os.system("fastboot flash system "+topDir+"/system.img")
     elif (name == "cancel"):
+        isUsed = True
         os.system("shutdown -a")
+    elif (name == "android"):
+        isUsed = True
+        topDir = "G:/BaiduYunDownload/cdrom-4412-4.4/cdrom_4412_4.4/Tools/Image & update tools/usb update tools"
+        os.system("mmc erase boot 0 0 0")
+        os.system("mmc erase user 0 0 0")
+        os.system("fdisk -c 0 512 1000 200")
+        os.system("fastboot flash fwbl1 \""+topDir+"/4412/bl1.bin\"")
+        os.system("fastboot flash bl2 \""+topDir+"/4412/bl2.bin\"")
+        os.system("fastboot flash tzsw \""+topDir+"/4412/tzsw.bin\"")
+        os.system("fastboot flash bootloader \""+topDir+"/4412/u-boot.bin\"")
+        os.system("fastboot flash kernel \""+topDir+"/4412/zImage\"")
+        os.system("fastboot flash ramdisk \""+topDir+"/4412/ramdisk-uboot.img\"")
+        os.system("fastboot -w")
+        os.system("fastboot flash system \""+topDir+"/4412/system.img\"")
     elif (name == "cmd"):
         os.system("cmd")
         
