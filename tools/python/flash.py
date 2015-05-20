@@ -41,22 +41,28 @@ if not isUsed and name[-4:]=='.apk':
 
 def loopFlashImg(topDir):
     if (len(topDir) <1):
-        topDir="."
+        topDir="."    
     whnd = ctypes.windll.kernel32.GetConsoleWindow()
     if whnd != 0:
         ctypes.windll.user32.ShowWindow(whnd, 0)
         ctypes.windll.kernel32.CloseHandle(whnd)
     cmdFastBoot="fastboot flash"
-    cmd=[["u-boot.bin","bootloader","0"],["zImage","kernel","0"],["kernel.img","kernel","0"],["ramdisk.img","ramdisk","0"],["ramdisk-uboot.img","ramdisk","0"],["system","system","0"]]
+    cmd=[["u-boot.bin","bootloader","0"],["zImage","kernel","0"],["kernel.img","kernel","0"],["ramdisk.img","ramdisk","0"],["ramdisk-uboot.img","ramdisk","0"],["system.img","system","0"]]
     while (True):
         for  data in cmd:
             file = topDir + "/" + data[0]
             if (path.exists(file)):
-                lastTime=os.stat(file)[stat.ST_MTIME]
+                lastTime=os.stat(file)[stat.ST_MTIME]                
                 if (int(data[2]) <1):
                     data[2]=lastTime
                 if (int(data[2]) != lastTime):
                     data[2]=lastTime
+                    # 当前状态可能还在copy当中                    
+                    while True:
+                        lastSize = os.stat(file)[stat.ST_SIZE] 
+                        time.sleep(1)
+                        if (lastSize == os.stat(file)[stat.ST_SIZE]):
+                            break                    
                     print ("begin fastboot")
                     flashCmd=cmdFastBoot+" "+data[1]+ " "+topDir+"/"+ data[0]
                     print (flashCmd)
