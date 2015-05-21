@@ -12,6 +12,7 @@ isUsed=False
 # name 
 # flashImg: loop flash img
 
+
 if  sys.argv.__len__() >1:
     name=sys.argv[1];
 
@@ -43,11 +44,12 @@ def loopFlashImg(topDir):
     if (len(topDir) <1):
         topDir="."    
     whnd = ctypes.windll.kernel32.GetConsoleWindow()
-    if whnd != 0:
-        ctypes.windll.user32.ShowWindow(whnd, 0)
-        ctypes.windll.kernel32.CloseHandle(whnd)
+    #if whnd != 0:
+        #ctypes.windll.user32.ShowWindow(whnd, 0)
+        #ctypes.windll.kernel32.CloseHandle(whnd)
     cmdFastBoot="fastboot flash"
     cmd=[["u-boot.bin","bootloader","0"],["zImage","kernel","0"],["kernel.img","kernel","0"],["ramdisk.img","ramdisk","0"],["ramdisk-uboot.img","ramdisk","0"],["system.img","system","0"]]
+    cmd += [["wlan.ko","push","0","/system/lib/modules/"]]
     while (True):
         for  data in cmd:
             file = topDir + "/" + data[0]
@@ -63,12 +65,20 @@ def loopFlashImg(topDir):
                         time.sleep(1)
                         if (lastSize == os.stat(file)[stat.ST_SIZE]):
                             break                    
-                    print ("begin fastboot")
-                    flashCmd=cmdFastBoot+" "+data[1]+ " "+topDir+"/"+ data[0]
-                    print (flashCmd)
-                    os.system(flashCmd)
-                    os.system("fastboot reboot")
-                    print ("end fastboot")
+                    if (len(data) == 3):
+                        print ("begin fastboot")
+                        flashCmd=cmdFastBoot+" "+data[1]+ " "+topDir+"/"+ data[0]
+                        print (flashCmd)
+                        os.system(flashCmd)
+                        os.system("fastboot reboot")
+                        print ("end fastboot")
+                    elif (len(data) == 4 and data[1]=="push"):
+                        print ("begin push")
+                        pushCmd = "adb push "+topDir + "/"+data[0]+"  "+data[3]
+                        print (pushCmd)
+                        os.system(pushCmd)
+                        print ("end push")
+                        
         time.sleep(1)
         
 if not isUsed and name == "flashImg":
