@@ -9,9 +9,8 @@ if (weekday >-1 and weekday < 6):
     os.system("shutdown -f -s -t 1200")
 else:
     os.system("shutdown -f -s -t 60")
-    
-    
-
-    
+        
+input("input enter cancel shutdown")
+os.system("shutdown -a")
 # must add last,because hide the window
 subprocess.call([sys.executable,"C:/Users/Administrator/Desktop/flash.py","flashImg"])
