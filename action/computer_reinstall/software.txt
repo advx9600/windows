@@ -1,0 +1,34 @@
+/****windows****/
+visual studio 
+xampp
+eclipse
+securecrt
+photoshop
+sqlite-netFx40-setup-bundle-x86
+jdk1.6-linux
+jdk-windows
+beyond compare
+迷 你 迅雷 
+adobe audition
+arm-linux-gcc
+notepad
+vmware
+sqlitespy
+SQLyog
+xinnet
+dnw
+microsoft office 2013
+android sdk
+android source
+
+/****ubuntu*****/
+android img
+linux img
+
+
+/****others****/
+python
+QQ
+foxmail
+BaiduYun
+
