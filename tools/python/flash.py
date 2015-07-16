@@ -9,22 +9,22 @@ import ctypes
 
 name=""
 isUsed=False
+#os.system("start \"MyDeskShortcut\" D:/workspace/visualstudio/DesktopShortcut/DesktopShortcut/bin/Debug/DesktopShortcut.exe")
+#exit
 # name 
 # flashImg: loop flash img
-
 
 if  sys.argv.__len__() >1:
     name=sys.argv[1];
 
-flashImg=["bootloader=u-boot.bin","kernel=zImage","kernel=kernel.img","ramdisk=ramdisk-uboot.img","system=system.img"]
+flashImg=[["u-boot.bin","bootloader","0"],["zImage","kernel","0"],["kernel.img","kernel","0"],["boot.img","boot","0"],["ramdisk.img","ramdisk","0"],["ramdisk-uboot.img","ramdisk","0"],["system.img","system","0"]]
 csipLibs=["libcrypto.so", "libpj_opensl_dev.so", "libpj_silk_codec.so",  "libpjsipjni.so" ,"libstlport_shared.so"]
 
 if  not isUsed and name.__len__() >0 :
-    for i in flashImg:
-        j=i.split("=",2);
-        if basename(name)==(j[1]):
+    for i in flashImg:        
+        if basename(name)==(i[0]):
             isUsed=True
-            os.system("fastboot flash "+j[0]+" \""+name+"\"")
+            os.system("fastboot flash "+i[1]+" \""+name+"\"")
             break
 
 if not isUsed and name.__len__() > 0:
@@ -44,11 +44,11 @@ def loopFlashImg(topDir):
     if (len(topDir) <1):
         topDir="."    
     whnd = ctypes.windll.kernel32.GetConsoleWindow()
-    #if whnd != 0:
-        #ctypes.windll.user32.ShowWindow(whnd, 0)
-        #ctypes.windll.kernel32.CloseHandle(whnd)
+    if whnd != 0:
+        ctypes.windll.user32.ShowWindow(whnd, 0)
+        ctypes.windll.kernel32.CloseHandle(whnd)
     cmdFastBoot="fastboot flash"
-    cmd=[["u-boot.bin","bootloader","0"],["zImage","kernel","0"],["kernel.img","kernel","0"],["ramdisk.img","ramdisk","0"],["ramdisk-uboot.img","ramdisk","0"],["system.img","system","0"]]
+    cmd=flashImg
     cmd += [["wlan.ko","push","0","/system/lib/modules/"]]
     while (True):
         for  data in cmd:
