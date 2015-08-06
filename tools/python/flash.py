@@ -58,7 +58,6 @@ def loopFlashImg(topDir):
                 if (int(data[2]) <1):
                     data[2]=lastTime
                 if (int(data[2]) != lastTime):
-                    data[2]=lastTime
                     # 当前状态可能还在copy当中                    
                     while True:
                         lastSize = os.stat(file)[stat.ST_SIZE] 
@@ -78,6 +77,8 @@ def loopFlashImg(topDir):
                         print (pushCmd)
                         os.system(pushCmd)
                         print ("end push")
+
+                    data[2]=lastTime
                         
         time.sleep(1)
         
