@@ -78,7 +78,7 @@ def loopFlashImg(topDir):
                         os.system(pushCmd)
                         print ("end push")
 
-                    data[2]=lastTime
+                    data[2]=os.stat(file)[stat.ST_MTIME]                
                         
         time.sleep(1)
         
