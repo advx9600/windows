@@ -1,4 +1,14 @@
 /****windows****/
+ConEmu
+QtTabbar
+wps
+git-windows
+git-tortoise
+notepad++
+QQ
+FireFox
+FoxMail
+android studio
 visual studio 
 xampp
 eclipse
