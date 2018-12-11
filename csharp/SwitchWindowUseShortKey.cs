@@ -25,34 +25,44 @@ namespace ConsoleApp3
             A("MozillaWindowClass", "l", true); // firefox
             A("Notepad++", "n");    //
             A("Qt5QWindowIcon", "k"); // android 模拟器
-            A("VirtualConsoleClassWork", "m"); // conEmu
+            A("VirtualConsoleClass", "m"); // conEmu
+            A("BS2CHINAUI", "b", false, "BlueStacks App Player"); // android 模拟器
         }
         public class ClsBase
         {
 
-            public ClsBase(string name, string key, bool isMultiWin)
+            public ClsBase(string name, string key, bool isMultiWin, string title)
             {
                 this.name = name;
                 this.key = key;
                 this.isMultiWin = isMultiWin;
+                this.title = title;
             }
             public string name { get; }
             public string key { get; }
             public bool isMultiWin { get; }
+
+            public string title { get; }
         }
 
 
         private static List<ClsBase> TotalList = new List<ClsBase>();
 
-        private static void A(string name, string key, bool isMultiWin = false)
+        private static void A(string name, string key, bool isMultiWin = false, string title = null)
         {
-            TotalList.Add(new ClsBase(name, key, isMultiWin));
+            TotalList.Add(new ClsBase(name, key, isMultiWin, title));
         }
 
 
         static void Main(string[] args)
         {
-
+            if (false)
+            {
+                var pointer = new IntPtr(0x000406EA);
+                ShowWindow(pointer, 1);
+                SwitchToThisWindow(pointer, true);
+                return;
+            }
             addData();
             var inputKey = Console.ReadKey().KeyChar.ToString();
             foreach (var baseCls in TotalList)
@@ -61,7 +71,7 @@ namespace ConsoleApp3
                 if (inputKey.Equals(baseCls.key))
                 {
                     Console.WriteLine(baseCls.name);
-                    diskplayWindow(baseCls.name, baseCls.isMultiWin);
+                    diskplayWindow(baseCls.name, baseCls.title, baseCls.isMultiWin);
                     break;
                 }
             }
@@ -69,10 +79,10 @@ namespace ConsoleApp3
 
         }
 
-        private static void diskplayWindow(string lpszClass, bool isMultiWin)
+        private static void diskplayWindow(string lpszClass, string title, bool isMultiWin)
         {
             IntPtr ParenthWnd = new IntPtr(0);
-            ParenthWnd = FindWindow(lpszClass, null);
+            ParenthWnd = FindWindow(lpszClass, title);
             if (isMultiWin) // 多个窗口时，需要找到最下面一个
             {
                 for (var i = 0; i < 30; i++)
